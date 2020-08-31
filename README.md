@@ -25,7 +25,7 @@ python gbc-fr.py -mode inject -src-image cameraclub.bin -dst-rom gameboycam-intl
 ```
 
 ## Designing your frame image
-Game Boy Camera frames can use up to 96 unique tiles but a frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique frames after hitting the 96 tile limit and will re-use the first tile. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
+Game Boy Camera frames can use up to 96 unique tiles but a frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the first tile. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
 
 ![Designing with grid](docs/frame-unique-tiles.png)
 
@@ -34,7 +34,7 @@ Make sure to save your image reduced down to 4 colors, this is necessary to conv
 ![Reduced color png](docs/reduced-colors.png)
 
 ## Converting your frame image
-Since this script accepts already tile formatted images, you will need to use a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html) to do the conversion. Pic2Tiles accepts 4 color paletted images and allows saving as binary 2bpp format. Choose **binary** as the format in the application window. *Hoping to build tile conersion into this script later and eliminate this step.*
+Since this script accepts already tile formatted images, you will need to use a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html) to do the conversion. Pic2Tiles accepts 4 color paletted images and allows saving as binary 2bpp format. Choose **binary** as the format in the application window. *Hoping to build tile conversion into this script later and eliminate this step.*
 ![Pic2Tiles](docs/pic2tiles.png)
 
 ## Usage
