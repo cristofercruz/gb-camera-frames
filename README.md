@@ -41,4 +41,4 @@ Since this script accepts already tile formatted images, you will need to use a 
 Your modified ROM will load into emulators but may show a warning about incorrect checksum. Eventually, your rom can be loaded onto a custom flashable Game Boy Camera cartridge once it becomes available.
 
 ## Credits
-Thanks to @jkbenaim for his [gbcamextrac](https://github.com/jkbenaim/gbcamextract) program which helped to figure out the frame data and map tile addresses. 
+Thanks to @jkbenaim for his [gbcamextract](https://github.com/jkbenaim/gbcamextract) program which helped to figure out the frame data and tile map addresses. 
