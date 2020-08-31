@@ -32,7 +32,7 @@ Make sure to save your image reduced down to 4 colors, this is necessary to conv
 ![Reduced color png](docs/reduced-colors.png)
 
 ## Converting your frame image
-Since this script accepts already tile formatted images, you will need to use a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html) to do the conversion. Pic2Tiles accepts 4 color paletted images and allows saving as binary 2bpp format. Choose **binary** as the format in the application window.
+Since this script accepts already tile formatted images, you will need to use a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html) to do the conversion. Pic2Tiles accepts 4 color paletted images and allows saving as binary 2bpp format. Choose **binary** as the format in the application window. *Hoping to build tile conersion into this script later and eliminate this step.*
 ![Pic2Tiles](docs/pic2tiles.png)
 
 ## Usage
