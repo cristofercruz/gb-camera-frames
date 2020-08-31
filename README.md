@@ -11,12 +11,14 @@ usage: gbc-fr.py [-h] -mode {copy,inject} [-src-rom src.gb]
 Two modes are available copy or inject.
 
 Copy allows taking frame data from one rom file and pasting into another. You specify the source rom and source frame as well as target rom and target frame.
+
 **Copy Example**: Copy frame 2 from Japanese Pocket Camera rom onto the International rom, replacing frame 7.
 ```
 python gbc-fr.py -mode copy -src-rom pocketcam-jp.gb -src-frame 2 -dst-rom gameboycam-intl.gb -dst-frame 7
 ```
 
 Inject allows using a completely new image to replace an existing frame. You specify the source image in (2bpp binary tile format) as well as the target rom and target frame.
+
 **Inject Example**: Load tile data from supplied image onto the International rom, replacing frame 18.
 ```
 python gbc-fr.py -mode inject -src-image cameraclub.bin -dst-rom gameboycam-intl.gb -dst-frame 18
