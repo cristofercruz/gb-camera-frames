@@ -61,6 +61,12 @@ def frame_inject(source_image, destination_rom, destination_frame):
 						# push tile to frame data
 						frameTiles.append(tile)
 						uniqueTileIndex+=1
+					else:
+						# once tile limit is reached, re-use first tile
+						if currentTile in tbTilePositions:
+							tbMap.append(1)
+						elif currentTile in lrTilePositions:
+							lrMap.append(1)
 				else:
 					# push re-used tile index  to tile map
 					for i in range(len(frameTiles)):
