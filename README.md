@@ -8,11 +8,11 @@ This script requires the following Python libraries:
 python -m pip install --upgrade Pillow
 python -m pip install --upgrade img2gb
 ```
-
+## Usage
 ```
-usage: gbc-fr.py [-h] -mode {copy,inject} [-src-rom src.gb]
-                 [-src-frame [1-18]] [-src-image frame.png] -dst-rom dest.gb
-                 -dst-frame [1-18]
+usage: gbc-fr.py [-h] -mode {copy,inject}
+				 [-src-rom src.gb] [-src-frame [1-18]] [-src-image frame.png]
+                 -dst-rom dest.gb -dst-frame [1-18]
 ```
 
 Two modes are available copy or inject.
