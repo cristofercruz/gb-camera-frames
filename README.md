@@ -37,7 +37,7 @@ Game Boy Camera frames can use up to 96 unique tiles but a frame is made up of 1
 ![Designing with grid](docs/frame-unique-tiles.png)
 
 ## Saving your frame image
-Make sure to save your image reduced down to 4 colors, this is necessary to convert to 2bpp Game Boy tile format well. **Be sure that your 4 shades have contrast or the converted result will appear with less than 4 colors.**
+Make sure to save your image reduced down to 4 colors, this is necessary to convert to 2bpp Game Boy tile format well. **Ensure your 4 shades have good contrast or the converted result will appear washed out and may use less than 4 colors.**
 ![Reduced color png](docs/reduced-colors.png)
 
 ## Converting your frame image
