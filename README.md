@@ -43,8 +43,8 @@ Wilf frame dimensions 160px x 224px
 ![Wild frame example](docs/wild-frame.png)
 
 ***Design Templates***:
-![Standard frame PSD Template](/cristofercruz/game-boy-camera-frame-replacer/raw/master/docs/standard-frame-template.psd)
-![Wild frame PSD template](/cristofercruz/game-boy-camera-frame-replacer/raw/master/docs/wild-frame-template.psd)
+![Standard frame PSD Template](docs/standard-frame-template.psd?raw=1)
+![Wild frame PSD template](docs/wild-frame-template.psd?raw=1)
 
 ## Saving your frame image
 Make sure to save your image reduced down to 4 colors, this is necessary to convert to 2bpp Game Boy tile format well. **Ensure your 4 shades have good contrast or the converted result will appear washed out and may use less than 4 colors.**
