@@ -43,7 +43,9 @@ Wilf frame dimensions 160px x 224px
 ![Wild frame example](docs/wild-frame.png)
 
 ***Design Templates***:
+
 [Standard frame PSD Template](docs/standard-frame-template.psd?raw=1)
+
 [Wild frame PSD template](docs/wild-frame-template.psd?raw=1)
 
 ## Saving your frame image
