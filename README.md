@@ -10,7 +10,7 @@ python -m pip install --upgrade img2gb
 ```
 ## Usage
 ```
-usage: gbc-fr.py [-h] -mode {copy,inject}
+usage: gbc-fr.py [-h] -mode {copy,inject} -frame-type {standard,wild}
 			[-src-rom src.gb] [-src-frame [1-18]] [-src-image frame.png]
 			-dst-rom dest.gb -dst-frame [1-18]
 ```
@@ -19,22 +19,26 @@ Two modes are available copy or inject.
 
 Copy allows taking frame data from one rom file and pasting into another. You specify the source rom and source frame as well as target rom and target frame.
 
-**Copy Example**: Copy frame 2 from Japanese Pocket Camera rom onto the International rom, replacing frame 7.
+**Copy Example**: Copy wild frame 2 from Japanese Pocket Camera rom onto the International rom, replacing wild frame 4.
 ```
-python gbc-fr.py -mode copy -src-rom pocketcam-jp.gb -src-frame 2 -dst-rom gameboycam-intl.gb -dst-frame 7
+python gbc-fr.py -mode copy -frame-type wild -src-rom pocketcam-jp.gb -src-frame 2 -dst-rom gameboycam-intl.gb -dst-frame 4
 ```
 
 Inject allows using a completely new image to replace an existing frame. You can specify the source image as a .png, .bmp and it will be converted to tile data or you can provide already formatted tile data as .bin. You will also specify the target rom and target frame.
 
-**Inject Example**: Load tile data from supplied image onto the International rom, replacing frame 18.
+**Inject Example**: Load tile data from supplied image onto the International rom, replacing frame 7.
 ```
-python gbc-fr.py -mode inject -src-image cameraclub.png -dst-rom gameboycam-intl.gb -dst-frame 18
+python gbc-fr.py -mode inject -frame-type standard -src-image cameraclub.png -dst-rom gameboycam-intl.gb -dst-frame 7
 ```
 
 ## Designing your frame image
-Game Boy Camera frames can use up to 96 unique tiles but a frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
+Game Boy Camera standard frames can use up to 96 unique tiles but a frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
 
 ![Designing with grid](docs/frame-unique-tiles.png)
+
+Wild frames use don't share the same limit and can use all unique tiles across the entire image.
+
+![Wild frame example](docs/wild-frame.png)
 
 ## Saving your frame image
 Make sure to save your image reduced down to 4 colors, this is necessary to convert to 2bpp Game Boy tile format well. **Ensure your 4 shades have good contrast or the converted result will appear washed out and may use less than 4 colors.**
