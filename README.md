@@ -34,11 +34,17 @@ python gbc-fr.py -mode inject -frame-type standard -src-image cameraclub.png -ds
 ## Designing your frame image
 Game Boy Camera standard frames can use up to 96 unique tiles but a frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
 
+Standard frame dimensions 160px x 144px
 ![Designing with grid](docs/frame-unique-tiles.png)
 
-Wild frames use don't share the same limit and can use all unique tiles across the entire image.
+Wild frames don't share the same limit and can use all unique tiles across the entire image.
 
+Wilf frame dimensions 160px x 224px
 ![Wild frame example](docs/wild-frame.png)
+
+***Design Templates***:
+![Standard frame PSD Template](docs/standard-frame-template.psd)
+![Wild frame PSD template](docs/wild-frame-template.psd)
 
 ## Saving your frame image
 Make sure to save your image reduced down to 4 colors, this is necessary to convert to 2bpp Game Boy tile format well. **Ensure your 4 shades have good contrast or the converted result will appear washed out and may use less than 4 colors.**
