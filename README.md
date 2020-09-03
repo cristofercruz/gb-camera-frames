@@ -41,17 +41,17 @@ Two modes are available copy or inject.
 
 Copy allows taking frame data from one rom file and pasting into another. You specify the source rom and source frame as well as target rom and target frame.
 
-**Example**: Copy wild frame 2 from JP Pocket Camera rom onto the international rom, replacing wild frame 4.
-```
-python gbc-fr.py -m copy -ft wild -sr pocketcam-jp.gb -sf 2 -tr gameboycam-intl.gb -df 4
-```
+**Example**: Copy wild frame 2 from JP Pocket Camera rom onto the international rom, replacing wild frame 4.  
+<pre>
+python gbc-fr.py <b>--mode</b> copy <b>--frame-type</b> wild <b>--source-rom</b> pocketcam-jp.gb <b>--source-frame</b> 2 <b>--target-rom</b> gameboycam-intl.gb <b>--target-frame</b> 4
+</pre>
 
 Inject allows using a completely new image to replace an existing frame. You can specify the source image as a .png, .bmp and it will be converted to tile data or you can provide already formatted tile data as .bin. You will also specify the target rom and target frame.
 
-**Example**: Load tile data from supplied image and inject into the International rom, replacing frame 7.
-```
-python gbc-fr.py -m inject -ft standard -si cameraclub.png -tr gameboycam-intl.gb -df 7
-```
+**Example**: Load tile data from supplied image and inject into the International rom, replacing frame 7.  
+<pre>
+python gbc-fr.py <b>--mode</b> injet <b>--frame-type</b> standard <b>--source-image</b> cameraclub.png <b>--target-rom</b> gameboycam-intl.gb <b>--target-frame</b> 7
+</pre>
 
 ## Designing your frame image
 Game Boy Camera standard frames can use up to 96 unique tiles but a frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
