@@ -56,12 +56,14 @@ python gbc-fr.py -m inject -ft standard -si cameraclub.png -tr gameboycam-intl.g
 ## Designing your frame image
 Game Boy Camera standard frames can use up to 96 unique tiles but a frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
 
-![Designing with grid](docs/frame-unique-tiles.png)
 *Standard frame dimensions 160px × 144px*
+
+![Designing with grid](docs/frame-unique-tiles.png)
 
 Wild frames don't share the same limit and can use all unique tiles across the entire image.
 
-Wilf frame dimensions 160px × 224px
+*Wild frame dimensions 160px × 224px*
+
 ![Wild frame example](docs/wild-frame.png)
 
 ***Design Templates***:
@@ -86,4 +88,5 @@ This script will also patch your rom to expose all 8 available wild frame slots.
 
 ## Credits
 Thanks to @jkbenaim for their [gbcamextract](https://github.com/jkbenaim/gbcamextract) program which helped to figure out the frame data and tile map addresses.
+
 Thanks to @flozz for their [img2gb](https://github.com/flozz/img2gb) library which provides tile conversion for this script.
