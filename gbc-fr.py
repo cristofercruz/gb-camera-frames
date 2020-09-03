@@ -6,14 +6,14 @@ from PIL import Image
 from argparse import RawTextHelpFormatter
 from argparse import RawDescriptionHelpFormatter
 
-parser = argparse.ArgumentParser(description='Tool to modify standard photo frames in Game Boy Camera rom.\n\nUse inject mode to insert a frame from binary tile image file or copy mode to transfer frame data from one rom to another.', formatter_class=RawDescriptionHelpFormatter)
-parser.add_argument('-mode', required=True, choices=['copy', 'inject'], default='inject', help='inject or copy')
-parser.add_argument('-src-rom', metavar='src.gb', help='source rom for copy mode')
-parser.add_argument('-frame-type', required=True, choices=['standard', 'wild'], default='standard', help='standard or wild')
-parser.add_argument('-src-frame', metavar='[1-18]', choices=range(1,19), type=int, help='[1-18 standard] [1-8 wild] frame number from source rom')
-parser.add_argument('-src-image', metavar='frame.png', help='source image in inject mode (.png, .bmp or already formatted tile data .bin)')
-parser.add_argument('-dst-rom', required=True, metavar='dest.gb', help='destination rom file')
-parser.add_argument('-dst-frame', required=True, metavar='[1-18]', choices=range(1,19), type=int, help='[1-18 standard] [1-8 wild] destination frame number')
+parser = argparse.ArgumentParser(description='Tool to modify standard photo frames in Game Boy Camera rom.\n\nUse inject mode to insert a frame from binary tile image file or copy mode to transfer frame data from one rom to another.', formatter_class=RawTextHelpFormatter)
+parser.add_argument('--mode', '-m', required=True, choices=['copy', 'inject'], default='inject', help='\n')
+parser.add_argument('--frame-type', '-ft', required=True, choices=['standard', 'wild'], default='standard', help='\n')
+parser.add_argument('--source-rom', '-sr', metavar='src.gb', help='source rom, required for copy mode\n\n')
+parser.add_argument('--source-frame', '-sf', metavar='[1-18]', choices=range(1,19), type=int, help='standard:[1-18] wild:[1-8] frame number from source rom, required for copy mode\n\n')
+parser.add_argument('--source-image', '-si', metavar='frame.png', help='source image for inject mode (.png, .bmp or already formatted tile data .bin)\n\n')
+parser.add_argument('--target-rom', '-tr', required=True, metavar='dest.gb', help='destination rom file\n\n')
+parser.add_argument('--target-frame', '-tf', required=True, metavar='[1-18]', choices=range(1,19), type=int, help='[1-18 standard] [1-8 wild] destination frame number')
 args = parser.parse_args()
 
 standardFramesStartAddr = 850296
@@ -42,7 +42,7 @@ def frame_copy(frame_type, source_rom, source_frame, destination_rom, destinatio
 		destinationRom.write(frameData)
 		destinationRom.close()
 	finally:
-		print('destination rom modified, frame copied\n')
+		print('\ntarget rom modified, frame copied\n')
 
 frameTiles = []
 frameTilesWildLR = []
@@ -182,20 +182,20 @@ def frame_inject(frame_type, source_image, destination_rom, destination_frame, c
 		destinationRom.write(frameData)
 		destinationRom.close()
 	finally:
-		print('destination rom modified, frame injected\n')
+		print('\ntarget rom modified, frame injected\n')
 
-if (args.src_frame > 8 or args.dst_frame > 8) and args.frame_type == 'wild':
+if (args.source_frame > 8 or args.target_frame > 8) and args.frame_type == 'wild':
 	print('max index for wild frames is 8\n')
 else:
 	if args.mode == "copy":
-		expose_all_wild_frames(args.dst_rom)
-		frame_copy(args.frame_type, args.src_rom, args.src_frame, args.dst_rom, args.dst_frame)
+		expose_all_wild_frames(args.target_rom)
+		frame_copy(args.frame_type, args.source_rom, args.source_frame, args.target_rom, args.target_frame)
 	else:
-		if args.src_image.endswith('bin'):
-			expose_all_wild_frames(args.dst_rom)
-			frame_inject(args.frame_type, args.src_image, args.dst_rom, args.dst_frame, False)
-		elif args.src_image.endswith('png') or args.src_image.endswith('bmp'):
-			expose_all_wild_frames(args.dst_rom)
-			frame_inject(args.frame_type, args.src_image, args.dst_rom, args.dst_frame, True)
+		if args.source_image.endswith('bin'):
+			expose_all_wild_frames(args.target_rom)
+			frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, False)
+		elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
+			expose_all_wild_frames(args.target_rom)
+			frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, True)
 		else:
 			print('source image can be .png, .bmp or already converted .bin (2bpp)\n')

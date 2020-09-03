@@ -10,9 +10,31 @@ python -m pip install --upgrade img2gb
 ```
 ## Usage
 ```
-usage: gbc-fr.py [-h] -mode {copy,inject} -frame-type {standard,wild}
-			[-src-rom src.gb] [-src-frame [1-18]] [-src-image frame.png]
-			-dst-rom dest.gb -dst-frame [1-18]
+usage: gbc-fr.py [-h] --mode {copy,inject}
+                  --frame-type {standard,wild}
+                  --source-rom src.gb --source-frame [1-18]
+                  --source-image frame.png
+                  --target-rom trgt.gb --target-frame [1-18]
+
+arguments:
+  --mode, -m {copy,inject}
+
+  --frame-type, -ft {standard,wild}
+
+  --source-rom, -sr src.gb
+    source rom to get data from in copy mode
+
+  --source-frame, -sf [1-18]
+    frame number from source rom, standard:[1-18] wild:[1-8]
+
+  --source-image, -si frame.png
+    source image for inject mode (.png, .bmp or already formatted tile data .bin)
+
+  --target-rom, -tr trgt.gb
+    target rom file to be modified with changes
+
+  --target-frame, -tf [1-18]
+    frame number from target rom, standard:[1-18] wild:[1-8]
 ```
 
 Two modes are available copy or inject.
@@ -21,14 +43,14 @@ Copy allows taking frame data from one rom file and pasting into another. You sp
 
 **Copy Example**: Copy wild frame 2 from Japanese Pocket Camera rom onto the International rom, replacing wild frame 4.
 ```
-python gbc-fr.py -mode copy -frame-type wild -src-rom pocketcam-jp.gb -src-frame 2 -dst-rom gameboycam-intl.gb -dst-frame 4
+python gbc-fr.py -m copy -ft wild -sr pocketcam-jp.gb -sf 2 -tr gameboycam-intl.gb -df 4
 ```
 
 Inject allows using a completely new image to replace an existing frame. You can specify the source image as a .png, .bmp and it will be converted to tile data or you can provide already formatted tile data as .bin. You will also specify the target rom and target frame.
 
 **Inject Example**: Load tile data from supplied image onto the International rom, replacing frame 7.
 ```
-python gbc-fr.py -mode inject -frame-type standard -src-image cameraclub.png -dst-rom gameboycam-intl.gb -dst-frame 7
+python gbc-fr.py -m inject -ft standard -si cameraclub.png -tr gameboycam-intl.gb -df 7
 ```
 
 ## Designing your frame image
