@@ -199,9 +199,9 @@ else:
 	else:
 		if args.source_image.endswith('bin'):
 			expose_all_wild_frames(args.target_rom)
-			#frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, False)
+			frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, False)
 		elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
 			expose_all_wild_frames(args.target_rom)
-			#frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, True)
+			frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, True)
 		else:
 			print('source image can be .png, .bmp or already converted .bin (2bpp)\n')
