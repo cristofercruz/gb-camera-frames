@@ -58,12 +58,15 @@ wildLRTilePositions = [101,102,121,122,141,142,161,162,181,182,201,202,221,222,2
 
 def expose_all_wild_frames(destination_rom):
 	# patch rom to show all 8 wild frame slots
+	allFrames = '08FA82D5FE0120020E08'
 	romData = bytearray()
 	destinationRom = open(destination_rom, "r+b")
 	romData = bytearray(destinationRom.read())
-	romData = romData.replace(bytearray.fromhex('06FA82D5FE0120020E07'), bytearray.fromhex('08FA82D5FE0120020E08')).replace(bytearray.fromhex('06FA82D5FE0120020E08'), bytearray.fromhex('08FA82D5FE0120020E08'))
-	destinationRom.seek(0)
-	destinationRom.write(romData)
+	# only patch if needs patching
+	if (romData.find(bytearray.fromhex('06FA82D5FE0120020E07')) > 0 or romData.find(bytearray.fromhex('06FA82D5FE0120020E08')) > 0):
+		romData = romData.replace(bytearray.fromhex('06FA82D5FE0120020E07'), bytearray.fromhex(allFrames)).replace(bytearray.fromhex('06FA82D5FE0120020E08'), bytearray.fromhex(allFrames))
+		destinationRom.seek(0)
+		destinationRom.write(romData)
 	destinationRom.close()
 
 def process_tile(frame_type, tile):
@@ -85,21 +88,22 @@ def process_tile(frame_type, tile):
 	if currentTile in TBTilePositions or currentTile in LRTilePositions:
 		# check if it's a new/unique tile
 		if (frame_type == 'standard' and tile not in frameTiles) or (frame_type == 'wild'):
-			# max of 96 unique tiles per frame
+			# max of 96 unique tiles per frame for standard frames
 			if (frame_type == 'standard' and uniqueTileIndex < 96) or (frame_type == 'wild'):
 				# push unique tile index to tile map
-				if currentTile in TBTilePositions:
+				if currentTile in TBTilePositions and frame_type == 'standard':
 					tbMap.append(uniqueTileIndex)
-				elif currentTile in LRTilePositions:
+				elif currentTile in LRTilePositions and frame_type == 'standard':
 					lrMap.append(uniqueTileIndex)
-				# push tile to frame data
+				# push tile to frame data arrays
 				if currentTile in LRTilePositions and frame_type == 'wild':
+					# separate wild frame side tiles, these go at the end
 					frameTilesWildLR.append(tile)
 				else:
 					frameTiles.append(tile)
 				uniqueTileIndex+=1
 			else:
-				# once tile limit is reached, re-use first tile
+				# once tile limit is reached on standard frame, re-use last tile
 				if currentTile in TBTilePositions:
 					tbMap.append(95)
 				elif currentTile in LRTilePositions:
@@ -156,6 +160,7 @@ def frame_inject(frame_type, source_image, destination_rom, destination_frame, c
 				currentTile+=1
 			sourceImage.close()
 
+		# only need tile map for standard frames
 		if frame_type == 'standard':
 			# combine tile maps
 			tileMap = tbMap+lrMap
@@ -164,6 +169,7 @@ def frame_inject(frame_type, source_image, destination_rom, destination_frame, c
 			while len(frameTiles) < 96:
 				frameTiles.append(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 		else:
+			# add wild frame side tiles to the end of frame array
 			frameTiles += frameTilesWildLR
 
 		# merge all bytes
@@ -193,9 +199,9 @@ else:
 	else:
 		if args.source_image.endswith('bin'):
 			expose_all_wild_frames(args.target_rom)
-			frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, False)
+			#frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, False)
 		elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
 			expose_all_wild_frames(args.target_rom)
-			frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, True)
+			#frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, True)
 		else:
 			print('source image can be .png, .bmp or already converted .bin (2bpp)\n')
