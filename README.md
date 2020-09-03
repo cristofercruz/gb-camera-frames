@@ -50,7 +50,7 @@ Inject allows using a completely new image to replace an existing frame. You can
 
 **Example**: Load tile data from supplied image and inject into the International rom, replacing frame 7.  
 <pre>
-python gbc-fr.py <b>--mode</b> injet <b>--frame-type</b> standard <b>--source-image</b> cameraclub.png <b>--target-rom</b> gameboycam-intl.gb <b>--target-frame</b> 7
+python gbc-fr.py <b>--mode</b> inject <b>--frame-type</b> standard <b>--source-image</b> cameraclub.png <b>--target-rom</b> gameboycam-intl.gb <b>--target-frame</b> 7
 </pre>
 
 ## Designing your frame image
