@@ -20,7 +20,7 @@ STANDARD_FRAME_OFFSET = 850296
 STANDARD_FRAME_LENGTH = 1672
 WILD_FRAME_OFFSET = 796672
 WILD_FRAME_LENGTH = 6144
-tileBytes = 16
+TILE_BYTES = 16
 
 frameTiles = []
 frameTilesWildSides = []
@@ -105,11 +105,11 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 		sourceImageTiles = open(sourceImage, "rb")
 		sourceImageTiles.seek(0)
 		# read source image, one tile at a time
-		tile = sourceImageTiles.read(tileBytes)
+		tile = sourceImageTiles.read(TILE_BYTES)
 		while tile:
 			process_tile(frameType, tile)
 			# read next tile
-			tile = sourceImageTiles.read(tileBytes)
+			tile = sourceImageTiles.read(TILE_BYTES)
 			currentTile+=1
 		sourceImageTiles.close()
 
