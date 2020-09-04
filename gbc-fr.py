@@ -91,11 +91,13 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 		# if source is bitmap, convert to tiles and process
 		image = Image.open(sourceImage)
 		imageWidth, imageHeight = image.size
+		# check image size
 		if frameType == 'standard' and (imageWidth != 160 or imageHeight != 144):
 			raise Exception("Incorrect image size, should be 160 x 144")
 		elif frameType == 'wild' and (imageWidth != 160 or imageHeight != 224):
 			raise Exception("Incorrect image size, should be 160 x 224")
 		sourceImageTiles = GBTileset.from_image(image).tiles
+		# process tiles
 		for aTile in sourceImageTiles:
 			tile = bytearray.fromhex(aTile.to_hex_string())
 			process_tile(frameType, tile)
@@ -106,6 +108,7 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 		sourceImageTiles.seek(0)
 		# read source image, one tile at a time
 		tile = sourceImageTiles.read(TILE_BYTES)
+		# process tiles
 		while tile:
 			process_tile(frameType, tile)
 			# read next tile
