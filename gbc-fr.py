@@ -168,7 +168,6 @@ def process_tile(frameType, tile):
 			# max of 96 unique tiles per frame for standard frames
 			if (frameType == 'standard' and uniqueStandardTileIndex < 96) or (frameType == 'wild'):
 				# push unique tile index to tile map
-				#print 'uniqueTile ' + str(uniqueStandardTileIndex)
 				if currentTile in TBTilePositions and frameType == 'standard':
 					frameStandardTopBottomMap.append(uniqueStandardTileIndex)
 				elif currentTile in LRTilePositions and frameType == 'standard':
