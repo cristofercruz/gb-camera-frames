@@ -57,12 +57,12 @@ python gbc-fr.py <b>--mode</b> inject <b>--frame-type</b> standard <b>--source-i
 Game Boy Camera standard frames can only use up to 96 unique tiles but a full standard frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile for any remaining slots. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
 
 *Standard frame dimensions 160px × 144px*  
-![Designing with grid](docs/frame-unique-tiles.png)
+<a href="#"><img src="docs/frame-unique-tiles.png" alt="Designing with grid"/></a>  
 
 Wild frames don't share the same limit and can use all unique tiles across the entire image.
 
 *Wild frame dimensions 160px × 224px*  
-![Wild frame example](docs/wild-frame.png)
+<a href="#"><img src="docs/wild-frame.png" alt="Designing wild frame"/></a>  
 
 ***Design Templates***:
 
@@ -71,12 +71,12 @@ Wild frames don't share the same limit and can use all unique tiles across the e
 
 ## Saving your frame image
 Save your image reduced down to 4 colors, this will give you a good result when converting to Game Boy tile format. **Ensure your final image has good contrast or the converted result will appear washed out and may use less than 4 shades.**  
-![4 shades color map](docs/4-shades.png)  
-![Reduced color png](docs/reduced-colors.png)  
+<a href="#"><img src="docs/4-shades.png" alt="4 shades color map"/></a>  
+<a href="#"><img src="docs/reduced-colors.png" alt="Save for Web dialog with reduced colors"/></a> 
 
 ## Converting your frame image
-This script uses img2gb library to convert .png and .bmp source images to tile data but if you prefer to do the conversion yourself for more control over the result, you can do so using a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html)
-![Pic2Tiles](docs/pic2tiles.png)
+This script uses img2gb library to convert .png and .bmp source images to tile data but if you prefer to do the conversion yourself for more control over the result, you can do so using a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html)  
+<a href="#"><img src="docs/pic2tiles.png" alt="Pic2Tiles application window"/></a> 
 
 ## Purpose
 Your modified ROM can be loaded into emulators with printer emulation like mGBA (some emulators may show a warning about incorrect checksum). Eventually, your custom rom could be loaded onto a [Game Boy Camera Flash Cartridge](https://github.com/HDR/Gameboy-Camera-Flashcart) once it becomes available.
