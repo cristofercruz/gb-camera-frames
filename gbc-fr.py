@@ -57,7 +57,10 @@ def frame_copy(frameType, sourceRom, sourceFrame, targetRom, targetFrame):
 		FRAME_LENGHT = WILD_FRAME_LENGTH
 		FRAME_OFFSET = WILD_FRAME_OFFSET
 	sourceRomFile = open(sourceRom, "rb")
-	sourceRomFile.seek(FRAME_OFFSET+FRAME_LENGHT*sourceFrame)
+	if sourceFrame < 10:
+		sourceRomFile.seek(FRAME_OFFSET+FRAME_LENGHT*sourceFrame)
+	else:
+		sourceRomFile.seek(FRAME_OFFSET+16384+FRAME_LENGHT*(sourceFrame-9))
 	frameData = sourceRomFile.read(FRAME_LENGHT)
 	sourceRomFile.close()
 
