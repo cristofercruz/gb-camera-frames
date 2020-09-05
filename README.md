@@ -62,7 +62,7 @@ Game Boy Camera standard frames can only use up to 96 unique tiles but a full st
 Wild frames don't share the same limit and can use all unique tiles across the entire image.
 
 *Wild frame dimensions 160px × 224px*  
-<a href="#"><img src="docs/wild-frame.png" alt="Designing wild frame"/></a>  
+<a href="#wild-frame"><img id="wild-frame" src="docs/wild-frame.png" alt="Designing wild frame"/></a>  
 
 ***Design Templates***:
 
@@ -71,12 +71,12 @@ Wild frames don't share the same limit and can use all unique tiles across the e
 
 ## Saving your frame image
 Save your image reduced down to 4 colors, this will give you a good result when converting to Game Boy tile format. **Ensure your final image has good contrast or the converted result will appear washed out and may use less than 4 shades.**  
-<a href="#"><img src="docs/4-shades.png" alt="4 shades color map"/></a>  
-<a href="#"><img src="docs/reduced-colors.png" alt="Save for Web dialog with reduced colors"/></a> 
+<a href="#gameboy-palette"><img id="gameboy-palette" src="docs/4-shades.png" alt="4 shades color map"/></a>  
+<a href="#reduced-colors"><img id="reduced-colors" src="docs/reduced-colors.png" alt="Save for Web dialog with reduced colors"/></a> 
 
 ## Converting your frame image
 This script uses img2gb library to convert .png and .bmp source images to tile data but if you prefer to do the conversion yourself for more control over the result, you can do so using a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html)  
-<a href="#"><img src="docs/pic2tiles.png" alt="Pic2Tiles application window"/></a> 
+<a href="#pic2tiles"><img id="pic2tiles" src="docs/pic2tiles.png" alt="Pic2Tiles application window"/></a> 
 
 ## Purpose
 Your modified ROM can be loaded into emulators with printer emulation like mGBA (some emulators may show a warning about incorrect checksum). Eventually, your custom rom could be loaded onto a [Game Boy Camera Flash Cartridge](https://github.com/HDR/Gameboy-Camera-Flashcart) once it becomes available.
