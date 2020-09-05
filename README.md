@@ -57,7 +57,7 @@ python gbc-fr.py <b>--mode</b> inject <b>--frame-type</b> standard <b>--source-i
 Game Boy Camera standard frames can only use up to 96 unique tiles but a full standard frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile for any remaining slots. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
 
 *Standard frame dimensions 160px × 144px*  
-<a href="#"><img src="docs/frame-unique-tiles.png" alt="Designing with grid"/></a>  
+<a href="#design-grid"><img id="design-grid" src="docs/frame-unique-tiles.png" alt="Designing with grid"/></a>  
 
 Wild frames don't share the same limit and can use all unique tiles across the entire image.
 
