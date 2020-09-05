@@ -77,8 +77,8 @@ Make sure to save your image reduced down to 4 colors, this is necessary to conv
 This script uses img2gb library to convert .png and .bmp source images to tile data but if you prefer to do the conversion yourself for more control over the result, you can do so using a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html)
 ![Pic2Tiles](docs/pic2tiles.png)
 
-## Usage
-Your modified ROM will load into emulators but may show a warning about incorrect checksum. Eventually, your rom can be loaded onto a custom flashable Game Boy Camera cartridge once it becomes available.
+## Purpose
+Your modified ROM can be loaded into emulators with printer emulation like mGBA (some emulators may show a warning about incorrect checksum). Eventually, your custom rom could be loaded onto a [Game Boy Camera Flash Cartridge](https://github.com/HDR/Gameboy-Camera-Flashcart) once it becomes available.
 
 ## Notes
 This script will also patch your rom to expose all 8 available wild frame slots. The Japan region Pocket Camera normally only exposes 6 wild frames and the international region Game Boy Camera only exposes 7.
