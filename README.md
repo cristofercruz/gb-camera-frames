@@ -54,7 +54,7 @@ python gbc-fr.py <b>--mode</b> inject <b>--frame-type</b> standard <b>--source-i
 </pre>
 
 ## Designing your frame image
-Game Boy Camera standard frames can use up to 96 unique tiles but a frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
+Game Boy Camera standard frames can only use up to 96 unique tiles but a full standard frame is made up of 136 tiles so you will need to re-use or pattern some tiles. When designing your frame, you can show a grid to be aware of how many unique tiles you've used up. The script will ignore unique tiles after hitting the 96 tile limit and will re-use the last tile for any remaining slots. The example below uses just 46 unique tiles and a re-used black tile for the rest of the frame.
 
 *Standard frame dimensions 160px × 144px*  
 ![Designing with grid](docs/frame-unique-tiles.png)
@@ -66,15 +66,15 @@ Wild frames don't share the same limit and can use all unique tiles across the e
 
 ***Design Templates***:
 
-[Standard frame PSD Template](docs/standard-frame-template.psd?raw=1)  
-[Wild frame PSD template](docs/wild-frame-template.psd?raw=1)
+[Standard frame PSD Template](samples/standard-frame-template.psd?raw=1)  
+[Wild frame PSD template](samples/wild-frame-template.psd?raw=1)
 
 ## Saving your frame image
 Make sure to save your image reduced down to 4 colors, this is necessary to convert to 2bpp Game Boy tile format well. **Ensure your 4 shades have good contrast or the converted result will appear washed out and may use less than 4 colors.**
 ![Reduced color png](docs/reduced-colors.png)
 
 ## Converting your frame image
-This script uses img2gb library to convert .png and .bmp source images to tile data but if you prefer to do the conversion yourself for better control over the result, you can do so using a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html)
+This script uses img2gb library to convert .png and .bmp source images to tile data but if you prefer to do the conversion yourself for more control over the result, you can do so using a utility like [Pic2Tiles](http://www.budmelvin.com/dev/index.html)
 ![Pic2Tiles](docs/pic2tiles.png)
 
 ## Usage
