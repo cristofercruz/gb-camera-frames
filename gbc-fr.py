@@ -202,17 +202,16 @@ def main():
 			raise Exception("Max index for wild frames is 8")
 		else:
 			if args.mode == "copy":
-				expose_all_wild_frames(args.target_rom)
+				
 				frame_copy(args.frame_type, args.source_rom, args.source_frame, args.target_rom, args.target_frame)
 			else:
 				if args.source_image.endswith('bin'):
-					expose_all_wild_frames(args.target_rom)
 					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, False)
 				elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
-					expose_all_wild_frames(args.target_rom)
 					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, True)
 				else:
 					raise Exception("Source image can be .png, .bmp or already converted .bin (2bpp)")
+			expose_all_wild_frames(args.target_rom)
 	except Exception as error:
 		print '\n'+str(error)
 	finally:
