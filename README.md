@@ -70,8 +70,7 @@ Wild frames don't share the same limit and can use all unique tiles across the e
 [Wild frame PSD template](samples/wild-frame-template.psd?raw=1)
 
 ## Saving your frame image
-Make sure to save your image reduced down to 4 colors, this is necessary to convert to 2bpp Game Boy tile format well.  
-**Ensure your final image has good contrast or the converted result will appear washed out and may use less than 4 shades.**  
+Save your image reduced down to 4 colors, this will give you a good result when converting to Game Boy tile format. **Ensure your final image has good contrast or the converted result will appear washed out and may use less than 4 shades.**  
 ![4 shades color map](docs/4-shades.png)  
 ![Reduced color png](docs/reduced-colors.png)  
 
