@@ -16,10 +16,11 @@ parser.add_argument('--target-rom', '-tr', required=True, metavar='FILE', help='
 parser.add_argument('--target-frame', '-tf', required=True, metavar='[1-18]', choices=range(1,19), type=int, help='[1-18 standard] [1-8 wild] target frame number')
 args = parser.parse_args()
 
-STANDARD_FRAME_OFFSET = 850296
-STANDARD_FRAME_LENGTH = 1672
-WILD_FRAME_OFFSET = 796672
-WILD_FRAME_LENGTH = 6144
+STANDARD_FRAME_OFFSET = 0xD0000
+STANDARD_FRAME_LENGTH = 0x688
+WILD_FRAME_OFFSET = 0xC4000
+WILD_FRAME_LENGTH = 0x1800
+BANK_SHIFT = 0x4000
 TILE_BYTES = 16
 
 frameTiles = []
@@ -57,22 +58,22 @@ def frame_copy(frameType, sourceRom, sourceFrame, targetRom, targetFrame):
 		FRAME_LENGHT = WILD_FRAME_LENGTH
 		FRAME_OFFSET = WILD_FRAME_OFFSET
 	sourceRomFile = open(sourceRom, "rb")
-	if sourceFrame < 10:
+	if sourceFrame < 9:
 		sourceRomFile.seek(FRAME_OFFSET+FRAME_LENGHT*sourceFrame)
 	else:
-		sourceRomFile.seek(FRAME_OFFSET+16384+FRAME_LENGHT*(sourceFrame-9))
+		sourceRomFile.seek(FRAME_OFFSET+BANK_SHIFT+FRAME_LENGHT*(sourceFrame-9))
 	frameData = sourceRomFile.read(FRAME_LENGHT)
 	sourceRomFile.close()
 
 	targetRomFile = open(targetRom, "r+b")
-	if targetFrame < 10:
+	if targetFrame < 9:
 		targetRomFile.seek(FRAME_OFFSET+FRAME_LENGHT*targetFrame)
 	else:
-		targetRomFile.seek(FRAME_OFFSET+16384+FRAME_LENGHT*(targetFrame-9))
+		targetRomFile.seek(FRAME_OFFSET+BANK_SHIFT+FRAME_LENGHT*(targetFrame-9))
 	targetRomFile.write(frameData)
 	targetRomFile.close()
 
-	print "\nTarget rom modified, frame " + str(sourceFrame) + " copied from " + str(sourceRom) + " into slot " + str(targetFrame) + " on " + str(targetRom) + ".\n"
+	print "\nTarget rom modified, frame " + str(sourceFrame+1) + " copied from " + str(sourceRom) + " into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n"
 
 def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	# init tile and tile map
@@ -139,14 +140,14 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 		frameData.extend(bytearray(tileMap))
 
 	targetRomFile = open(targetRom, "r+b")
-	if targetFrame < 10:
+	if targetFrame < 9:
 		targetRomFile.seek(FRAME_OFFSET+FRAME_LENGHT*targetFrame)
 	else:
-		targetRomFile.seek(FRAME_OFFSET+16384+FRAME_LENGHT*(targetFrame-9))
+		targetRomFile.seek(FRAME_OFFSET+BANK_SHIFT+FRAME_LENGHT*(targetFrame-9))
 	targetRomFile.write(frameData)
 	targetRomFile.close()
 
-	print "\nTarget rom modified, source image " + str(sourceImage) + " injected into slot " + str(targetFrame) + " on " + str(targetRom) + ".\n"
+	print "\nTarget rom modified, source image " + str(sourceImage) + " injected into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n"
 
 def process_tile(frameType, tile):
 	global frameTiles
@@ -203,12 +204,12 @@ def main():
 		else:
 			if args.mode == "copy":
 				
-				frame_copy(args.frame_type, args.source_rom, args.source_frame, args.target_rom, args.target_frame)
+				frame_copy(args.frame_type, args.source_rom, args.source_frame-1, args.target_rom, args.target_frame-1)
 			else:
 				if args.source_image.endswith('bin'):
-					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, False)
+					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, False)
 				elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
-					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame, True)
+					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, True)
 				else:
 					raise Exception("Source image can be .png, .bmp or already converted .bin (2bpp)")
 			expose_all_wild_frames(args.target_rom)
