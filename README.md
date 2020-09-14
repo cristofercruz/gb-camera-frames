@@ -25,7 +25,7 @@ arguments:
     source rom to get data from in copy mode
 
   --source-frame, -sf [1-18]
-    frame number from source rom, standard:[1-18] wild:[1-8]
+    frame number from source rom, standard:[1-18] wild:[1-8] (Hello Kitty - standard:[1-25] wild:[1-6])
 
   --source-image, -si frame.png
     source image for inject mode (.png, .bmp or already formatted tile data .bin)
