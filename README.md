@@ -84,6 +84,9 @@ Your modified ROM can be loaded into emulators with printer emulation like mGBA 
 ## Notes
 This script will also patch your rom to expose all 8 available wild frame slots. The Japan region Pocket Camera normally only exposes 6 wild frames and the international region Game Boy Camera only exposes 7.
 
+## Supported ROMs
+This script supports the 4 standard release rom variants (Game Boy Camera, Zelda Game Boy Camera, Pocket Camera, CoroCoro Pocket Camera) as a target or source file. A recent leak has brought to light a new unreleased Hello Kitty Pocket Camera rom variant which stores frame data unlike the others and as such is unsupported as a target rom but is supported as a source rom using the copy function so you can copy any of its 25 standard and 6 wild frames onto one of the release rom variants.
+
 ## Credits
 Thanks to @jkbenaim for their [gbcamextract](https://github.com/jkbenaim/gbcamextract) program which helped to figure out the frame data and tile map addresses.  
 Thanks to @flozz for their [img2gb](https://github.com/flozz/img2gb) library which provides tile conversion for this script.

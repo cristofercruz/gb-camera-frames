@@ -10,18 +10,23 @@ parser = argparse.ArgumentParser(description='Tool to modify standard photo fram
 parser.add_argument('--mode', '-m', required=True, choices=['copy', 'inject'], default='inject', help='\n')
 parser.add_argument('--frame-type', '-ft', required=True, choices=['standard', 'wild'], default='standard', help='\n')
 parser.add_argument('--source-rom', '-sr', metavar='FILE', help='source rom .gb file, required for copy mode\n\n')
-parser.add_argument('--source-frame', '-sf', metavar='[1-18]', choices=range(1,19), type=int, help='standard:[1-18] wild:[1-8] frame number from source rom, required for copy mode\n\n')
+parser.add_argument('--source-frame', '-sf', metavar='[1-18]', choices=range(1,26), type=int, help='standard:[1-18] wild:[1-8] (Hello Kitty - standard:[1-25] wild:[1-6]) frame number from source rom, required for copy mode\n\n')
 parser.add_argument('--source-image', '-si', metavar='FILE', help='source image file for inject mode (.png, .bmp or already formatted tile data .bin)\n\n')
 parser.add_argument('--target-rom', '-tr', required=True, metavar='FILE', help='target rom .gb file\n\n')
 parser.add_argument('--target-frame', '-tf', required=True, metavar='[1-18]', choices=range(1,19), type=int, help='[1-18 standard] [1-8 wild] target frame number')
 args = parser.parse_args()
 
+ROM_TITLE_OFFSET = 0x134
+ROM_TITLE_LENGTH = 0xF
 STANDARD_FRAME_OFFSET = 0xD0000
-STANDARD_FRAME_LENGTH = 0x688
+STANDARD_FRAME_LENGTH = 0x600
+STANDARD_FRAME_MAP_LENGTH = 0x88
 WILD_FRAME_OFFSET = 0xC4000
 WILD_FRAME_LENGTH = 0x1800
 BANK_SHIFT = 0x4000
 TILE_BYTES = 16
+HELLO_KITTY_STANDARD_OFFSETS = [[0xC6C70, 0xCF5D0], [0xC3B80, 0xCF548], [0xCBEC0, 0xCF4C0], [0xC5F10, 0xCF658], [0xCF210, 0xCF7F0], [0xC73A0, 0xCF768], [0xB7420, 0xCF6E0], [0xBE3E0, 0xCF438], [0xB3CD0, 0xC7EF0], [0xB2B80, 0xCF3B0], [0x8FD50, 0xC7F78], [0xC3800, 0xD7800], [0xBDC00, 0xD3F70], [0xD7F70, 0xD7888], [0xC5C00, 0xD7998], [0xB7C20, 0xD7910], [0xC3ED0, 0xD3D50], [0x33F80, 0xD3CC8], [0xDB800, 0xD3DD8], [0xB2200, 0xD3EE8], [0xB34D0, 0xD3E60], [0xB3030, 0xD7A20], [0x93E00, 0xD7D50], [0x77FE0, 0xCFCB8], [0x77FF0, 0xCFDC4]]
+HELLO_KITTY_WILD_OFFSETS = [0x6C000, 0x60000, 0x64000, 0x65800, 0x69800, 0x68000]
 
 frameTiles = []
 frameTilesWildSides = []
@@ -50,19 +55,33 @@ def expose_all_wild_frames(targetRom):
 		targetRomFile.write(romData)
 	targetRomFile.close()
 
-def frame_copy(frameType, sourceRom, sourceFrame, targetRom, targetFrame):
+def frame_copy(frameType, sourceRom, sourceFrame, targetRom, targetFrame, hkRom):
 	if frameType == 'standard':
-		FRAME_LENGHT = STANDARD_FRAME_LENGTH
+		FRAME_LENGHT = STANDARD_FRAME_LENGTH + STANDARD_FRAME_MAP_LENGTH
 		FRAME_OFFSET = STANDARD_FRAME_OFFSET
 	else:
 		FRAME_LENGHT = WILD_FRAME_LENGTH
 		FRAME_OFFSET = WILD_FRAME_OFFSET
+
 	sourceRomFile = open(sourceRom, "rb")
-	if sourceFrame < 9:
-		sourceRomFile.seek(FRAME_OFFSET+FRAME_LENGHT*sourceFrame)
+
+	if hkRom != True:
+		# use consistent frame offset for rom other than hello kitty
+		if sourceFrame < 9:
+			sourceRomFile.seek(FRAME_OFFSET+FRAME_LENGHT*sourceFrame)
+		else:
+			sourceRomFile.seek(FRAME_OFFSET+BANK_SHIFT+FRAME_LENGHT*(sourceFrame-9))
+		frameData = sourceRomFile.read(FRAME_LENGHT)
 	else:
-		sourceRomFile.seek(FRAME_OFFSET+BANK_SHIFT+FRAME_LENGHT*(sourceFrame-9))
-	frameData = sourceRomFile.read(FRAME_LENGHT)
+		# for hello kitty rom, use the stored non standard offset for each frame and frame map
+		if frameType == 'standard':
+			sourceRomFile.seek(HELLO_KITTY_STANDARD_OFFSETS[sourceFrame][0])
+			frameData = sourceRomFile.read(STANDARD_FRAME_LENGTH)
+			sourceRomFile.seek(HELLO_KITTY_STANDARD_OFFSETS[sourceFrame][1])
+			frameData += sourceRomFile.read(STANDARD_FRAME_MAP_LENGTH)
+		else:
+			sourceRomFile.seek(HELLO_KITTY_WILD_OFFSETS[sourceFrame])
+			frameData = sourceRomFile.read(WILD_FRAME_LENGTH)
 	sourceRomFile.close()
 
 	targetRomFile = open(targetRom, "r+b")
@@ -85,7 +104,7 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	global currentTile
 
 	if frameType == 'standard':
-		FRAME_LENGHT = STANDARD_FRAME_LENGTH
+		FRAME_LENGHT = STANDARD_FRAME_LENGTH + STANDARD_FRAME_MAP_LENGTH
 		FRAME_OFFSET = STANDARD_FRAME_OFFSET
 	else:
 		FRAME_LENGHT = WILD_FRAME_LENGTH
@@ -199,12 +218,32 @@ def process_tile(frameType, tile):
 
 def main():
 	try:
-		if (args.source_frame > 8 or args.target_frame > 8) and args.frame_type == 'wild':
+		targetRomFile = open(args.target_rom, "rb")
+		targetRomFile.seek(ROM_TITLE_OFFSET)
+		targetRomTitle = targetRomFile.read(ROM_TITLE_LENGTH)
+		sourceRomFile = open(args.source_rom, "rb")
+		sourceRomFile.seek(ROM_TITLE_OFFSET)
+		sourceRomTitle = sourceRomFile.read(ROM_TITLE_LENGTH)
+		targetRomHK = False
+		sourceRomHK = False
+		if targetRomTitle == "POCKETCAMERA_SN":
+			targetRomHK = True
+		elif sourceRomTitle == "POCKETCAMERA_SN":
+			sourceRomHK = True
+
+		if targetRomHK == True:
+			raise Exception("Hello Kitty Pocket Camera is only supported as a source rom using copy mode")
+		elif (args.source_frame > 8 or args.target_frame > 8) and args.frame_type == 'wild':
 			raise Exception("Max index for wild frames is 8")
+		elif args.source_frame > 6 and args.frame_type == 'wild' and sourceRomHK == True:
+			raise Exception("Max index for wild frames on this source rom is 6")
+		elif (sourceRomHK == False and args.source_frame > 18):
+			raise Exception("This rom can only select frame number from range [1-18]")
+		elif (sourceRomHK == True and args.source_frame > 25):
+			raise Exception("This rom can only select frame number from range [1-25]")
 		else:
 			if args.mode == "copy":
-				
-				frame_copy(args.frame_type, args.source_rom, args.source_frame-1, args.target_rom, args.target_frame-1)
+				frame_copy(args.frame_type, args.source_rom, args.source_frame-1, args.target_rom, args.target_frame-1, sourceRomHK)
 			else:
 				if args.source_image.endswith('bin'):
 					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, False)
