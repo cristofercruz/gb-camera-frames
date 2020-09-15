@@ -227,14 +227,14 @@ def main():
 		global sourceRomHK
 		targetRomFile = open(args.target_rom, "rb")
 		targetRomFile.seek(ROM_TITLE_OFFSET)
-		targetRomTitle = targetRomFile.read(ROM_TITLE_LENGTH)
+		targetRomTitle = targetRomFile.read(ROM_TITLE_LENGTH).decode("utf-8")
 		targetRomHK = False
 		if targetRomTitle == "POCKETCAMERA_SN":
 			targetRomHK = True
 		if args.mode == "copy":
 			sourceRomFile = open(args.source_rom, "rb")
 			sourceRomFile.seek(ROM_TITLE_OFFSET)
-			sourceRomTitle = sourceRomFile.read(ROM_TITLE_LENGTH)
+			sourceRomTitle = sourceRomFile.read(ROM_TITLE_LENGTH).decode("utf-8")
 			sourceRomHK = False
 			if sourceRomTitle == "POCKETCAMERA_SN":
 				sourceRomHK = True
