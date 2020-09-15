@@ -207,7 +207,7 @@ def process_tile(frameType, tile):
 				uniqueStandardTileIndex+=1
 			else:
 				# once tile limit is reached on standard frame, re-use last tile
-				limitReachedMessage = "WARNING: Source image used more than 96 unique tiles, injected frame will appear incomplete.\n"
+				limitReachedMessage = "NOTICE: Source image used more than 96 unique tiles, injected frame will appear incomplete.\n"
 				if currentTile in TBTilePositions:
 					frameStandardTopBottomMap.append(95)
 				elif currentTile in LRTilePositions:
