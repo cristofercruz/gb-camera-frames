@@ -28,12 +28,15 @@ TILE_BYTES = 16
 HELLO_KITTY_STANDARD_OFFSETS = [[0xC6C70, 0xCF5D0], [0xC3B80, 0xCF548], [0xCBEC0, 0xCF4C0], [0xC5F10, 0xCF658], [0xCF210, 0xCF7F0], [0xC73A0, 0xCF768], [0xB7420, 0xCF6E0], [0xBE3E0, 0xCF438], [0xB3CD0, 0xC7EF0], [0xB2B80, 0xCF3B0], [0x8FD50, 0xC7F78], [0xC3800, 0xD7800], [0xBDC00, 0xD3F70], [0xD7F70, 0xD7888], [0xC5C00, 0xD7998], [0xB7C20, 0xD7910], [0xC3ED0, 0xD3D50], [0x33F80, 0xD3CC8], [0xDB800, 0xD3DD8], [0xB2200, 0xD3EE8], [0xB34D0, 0xD3E60], [0xB3030, 0xD7A20], [0x93E00, 0xD7D50], [0x77FE0, 0xCFCB8], [0x77FF0, 0xCFDC4]]
 HELLO_KITTY_WILD_OFFSETS = [0x6C000, 0x60000, 0x64000, 0x65800, 0x69800, 0x68000]
 
+targetRomHK = False
+sourceRomHK = False
 frameTiles = []
 frameTilesWildSides = []
 frameStandardTopBottomMap = []
 frameStandardSidesMap = []
 uniqueStandardTileIndex = 0
 currentTile = 1
+limitReachedMessage = ""
 
 standardTopBottomTilePositions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,321,322,323,324,325,326,327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360]
 standardSidesTilePositions = [41,42,61,62,81,82,101,102,121,122,141,142,161,162,181,182,201,202,221,222,241,242,261,262,281,282,301,302,59,60,79,80,99,100,119,120,139,140,159,160,179,180,199,200,219,220,239,240,259,260,279,280,299,300,319,320]
@@ -166,7 +169,7 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	targetRomFile.write(frameData)
 	targetRomFile.close()
 
-	print "\nTarget rom modified, source image " + str(sourceImage) + " injected into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n"
+	print "\nTarget rom modified, source image " + str(sourceImage) + " injected into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n" + str(limitReachedMessage)
 
 def process_tile(frameType, tile):
 	global frameTiles
@@ -203,6 +206,7 @@ def process_tile(frameType, tile):
 				uniqueStandardTileIndex+=1
 			else:
 				# once tile limit is reached on standard frame, re-use last tile
+				limitReachedMessage = " WARNING: Source image used more than 96 unique tiles, injected frame will appear incomplete."
 				if currentTile in TBTilePositions:
 					frameStandardTopBottomMap.append(95)
 				elif currentTile in LRTilePositions:
@@ -218,18 +222,21 @@ def process_tile(frameType, tile):
 
 def main():
 	try:
+		global targetRomHK
+		global sourceRomHK
 		targetRomFile = open(args.target_rom, "rb")
 		targetRomFile.seek(ROM_TITLE_OFFSET)
 		targetRomTitle = targetRomFile.read(ROM_TITLE_LENGTH)
-		sourceRomFile = open(args.source_rom, "rb")
-		sourceRomFile.seek(ROM_TITLE_OFFSET)
-		sourceRomTitle = sourceRomFile.read(ROM_TITLE_LENGTH)
 		targetRomHK = False
-		sourceRomHK = False
 		if targetRomTitle == "POCKETCAMERA_SN":
 			targetRomHK = True
-		elif sourceRomTitle == "POCKETCAMERA_SN":
-			sourceRomHK = True
+		if args.mode == "copy":
+			sourceRomFile = open(args.source_rom, "rb")
+			sourceRomFile.seek(ROM_TITLE_OFFSET)
+			sourceRomTitle = sourceRomFile.read(ROM_TITLE_LENGTH)
+			sourceRomHK = False
+			if sourceRomTitle == "POCKETCAMERA_SN":
+				sourceRomHK = True
 
 		if targetRomHK == True:
 			raise Exception("Hello Kitty Pocket Camera is only supported as a source rom using copy mode")
