@@ -1,3 +1,4 @@
+import os
 import argparse
 import binascii
 from img2gb import GBTileset
@@ -119,9 +120,9 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 		imageWidth, imageHeight = image.size
 		# check image size
 		if frameType == 'standard' and (imageWidth != 160 or imageHeight != 144):
-			raise Exception("Incorrect image size, should be 160 x 144")
+			raise Exception("Incorrect image size, should be 160px x 144px")
 		elif frameType == 'wild' and (imageWidth != 160 or imageHeight != 224):
-			raise Exception("Incorrect image size, should be 160 x 224")
+			raise Exception("Incorrect image size, should be 160px x 224px")
 		sourceImageTiles = GBTileset.from_image(image).tiles
 		# process tiles
 		for aTile in sourceImageTiles:
@@ -131,6 +132,13 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	else:
 		# if source is already in tile format, read and process
 		sourceImageTiles = open(sourceImage, "rb")
+		sourceImageTiles.seek(0, os.SEEK_END)
+
+		if frameType == 'standard' and (sourceImageTiles.tell() != 5760):
+			raise Exception("Incorrect source tileset size, should be 160px x 144px (5760 bytes)")
+		elif frameType == 'wild' and (sourceImageTiles.tell() != 8960):
+			raise Exception("Incorrect source tileset size, should be 160px x 224px (8960 bytes)")
+
 		sourceImageTiles.seek(0)
 		# read source image, one tile at a time
 		tile = sourceImageTiles.read(TILE_BYTES)
