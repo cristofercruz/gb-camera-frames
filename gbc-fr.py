@@ -95,7 +95,7 @@ def frame_copy(frameType, sourceRom, sourceFrame, targetRom, targetFrame, hkRom)
 	targetRomFile.write(frameData)
 	targetRomFile.close()
 
-	print "\nTarget rom modified, frame " + str(sourceFrame+1) + " copied from " + str(sourceRom) + " into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n"
+	print("\nTarget rom modified, frame " + str(sourceFrame+1) + " copied from " + str(sourceRom) + " into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n")
 
 def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	# init tile and tile map
@@ -169,7 +169,7 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	targetRomFile.write(frameData)
 	targetRomFile.close()
 
-	print "\nTarget rom modified, source image " + str(sourceImage) + " injected into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n" + str(limitReachedMessage)
+	print("\nTarget rom modified, source image " + str(sourceImage) + " injected into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n" + str(limitReachedMessage))
 
 def process_tile(frameType, tile):
 	global frameTiles
@@ -241,27 +241,30 @@ def main():
 
 		if targetRomHK == True:
 			raise Exception("Hello Kitty Pocket Camera is only supported as a source rom using copy mode")
-		elif (args.source_frame > 8 or args.target_frame > 8) and args.frame_type == 'wild':
+		elif args.target_frame > 8 and args.frame_type == 'wild':
 			raise Exception("Max index for wild frames is 8")
-		elif args.source_frame > 6 and args.frame_type == 'wild' and sourceRomHK == True:
-			raise Exception("Max index for wild frames on this source rom is 6")
-		elif (sourceRomHK == False and args.source_frame > 18):
-			raise Exception("This rom can only select frame number from range [1-18]")
-		elif (sourceRomHK == True and args.source_frame > 25):
-			raise Exception("This rom can only select frame number from range [1-25]")
-		else:
-			if args.mode == "copy":
-				frame_copy(args.frame_type, args.source_rom, args.source_frame-1, args.target_rom, args.target_frame-1, sourceRomHK)
+
+		if args.mode == "copy":
+			if args.source_frame > 8 and args.frame_type == 'wild':
+				raise Exception("Max index for wild frames is 8")
+			elif args.source_frame > 6 and args.frame_type == 'wild' and sourceRomHK == True:
+				raise Exception("Max index for wild frames on this source rom is 6")
+			elif (sourceRomHK == False and args.source_frame > 18):
+				raise Exception("This rom can only select frame number from range [1-18]")
+			elif (sourceRomHK == True and args.source_frame > 25):
+				raise Exception("This rom can only select frame number from range [1-25]")
 			else:
-				if args.source_image.endswith('bin'):
-					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, False)
-				elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
-					frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, True)
-				else:
-					raise Exception("Source image can be .png, .bmp or already converted .bin (2bpp)")
-			expose_all_wild_frames(args.target_rom)
+				frame_copy(args.frame_type, args.source_rom, args.source_frame-1, args.target_rom, args.target_frame-1, sourceRomHK)
+		else:
+			if args.source_image.endswith('bin'):
+				frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, False)
+			elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
+				frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, True)
+			else:
+				raise Exception("Source image can be .png, .bmp or already converted .bin (2bpp)")
+		expose_all_wild_frames(args.target_rom)
 	except Exception as error:
-		print '\n'+str(error)
+		print('\n'+str(error))
 	finally:
 		pass
 
