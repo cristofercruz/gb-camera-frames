@@ -43,14 +43,14 @@ Copy allows taking frame data from one rom file and pasting into another. You sp
 
 **Example**: Copy wild frame 2 from JP Pocket Camera rom onto the international rom, replacing wild frame 4.  
 <pre>
-python gbc-fr.py <b>--mode</b> copy <b>--frame-type</b> wild <b>--source-rom</b> pocketcam-jp.gb <b>--source-frame</b> 2 <b>--target-rom</b> gameboycam-intl.gb <b>--target-frame</b> 4
+python ./gbc-fr.py <b>--mode</b> copy <b>--frame-type</b> wild <b>--source-rom</b> ./pocketcam-jp.gb <b>--source-frame</b> 2 <b>--target-rom</b> ./gameboycam-intl.gb <b>--target-frame</b> 4
 </pre>
 
 Inject allows using a completely new image to replace an existing frame. You can specify the source image as a .png, .bmp and it will be converted to tile data or you can provide already formatted tile data as .bin. You will also specify the target rom and target frame.
 
 **Example**: Load tile data from supplied image and inject into the International rom, replacing frame 7.  
 <pre>
-python gbc-fr.py <b>--mode</b> inject <b>--frame-type</b> standard <b>--source-image</b> cameraclub.png <b>--target-rom</b> gameboycam-intl.gb <b>--target-frame</b> 7
+python ./gbc-fr.py <b>--mode</b> inject <b>--frame-type</b> standard <b>--source-image</b> ./cameraclub.png <b>--target-rom</b> ./gameboycam-intl.gb <b>--target-frame</b> 7
 </pre>
 
 ## Designing your frame image
