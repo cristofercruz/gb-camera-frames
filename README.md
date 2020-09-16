@@ -89,5 +89,5 @@ This script supports the 4 standard release rom variants (Game Boy Camera, Zelda
 
 ## Credits
 Thanks to @jkbenaim for their [gbcamextract](https://github.com/jkbenaim/gbcamextract) program which helped to figure out the frame data and tile map addresses.  
-Thanks to @flozz for their [img2gb](https://github.com/flozz/img2gb) library which provides tile conversion for this script.
+Thanks to @flozz for their [img2gb](https://github.com/flozz/img2gb) library which provides tile conversion for this script.  
 Thanks to @Raphael-Boichot for contributing sample frame images
