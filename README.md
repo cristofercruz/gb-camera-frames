@@ -22,19 +22,19 @@ arguments:
   --frame-type, -ft {standard,wild}
 
   --source-rom, -sr src.gb
-    source rom to get data from in copy mode
+    path to source rom .gb file, required for copy mode
 
   --source-frame, -sf [1-18]
     frame number from source rom, standard:[1-18] wild:[1-8] (Hello Kitty - standard:[1-25] wild:[1-6])
 
   --source-image, -si frame.png
-    source image for inject mode (.png, .bmp or already formatted tile data .bin)
+    path to source image for inject mode (.png, .bmp or already formatted tile data .bin)
 
   --target-rom, -tr trgt.gb
-    target rom file to be modified with changes
+    path to target rom .gb file to be modified with changes
 
   --target-frame, -tf [1-18]
-    frame number from target rom, standard:[1-18] wild:[1-8]
+    frame number for target rom, standard:[1-18] wild:[1-8]
 ```
 
 Two modes are available copy or inject.
@@ -43,14 +43,14 @@ Copy allows taking frame data from one rom file and pasting into another. You sp
 
 **Example**: Copy wild frame 2 from JP Pocket Camera rom onto the international rom, replacing wild frame 4.  
 <pre>
-python ./gbc-fr.py <b>--mode</b> copy <b>--frame-type</b> wild <b>--source-rom</b> ./pocketcam-jp.gb <b>--source-frame</b> 2 <b>--target-rom</b> ./gameboycam-intl.gb <b>--target-frame</b> 4
+<b>$</b> python <b>./gbc-fr.py</b> <em>--mode</em> <b>copy</b> <em>--frame-type</em> <b>wild</b> <em>--source-rom</em> <b>./pocketcam-jp.gb</b> <em>--source-frame</em> <b>2</b> <em>--target-rom</em> <b>./gameboycam-intl.gb</b> <em>--target-frame</em> <b>4</b>
 </pre>
 
 Inject allows using a completely new image to replace an existing frame. You can specify the source image as a .png, .bmp and it will be converted to tile data or you can provide already formatted tile data as .bin. You will also specify the target rom and target frame.
 
-**Example**: Load tile data from supplied image and inject into the International rom, replacing frame 7.  
+**Example**: Load tile data from supplied image and inject into the international rom, replacing frame 7.  
 <pre>
-python ./gbc-fr.py <b>--mode</b> inject <b>--frame-type</b> standard <b>--source-image</b> ./cameraclub.png <b>--target-rom</b> ./gameboycam-intl.gb <b>--target-frame</b> 7
+<b>$</b> python <b>./gbc-fr.py</b> <em>--mode</em> <b>inject</b> <em>--frame-type</em> <b>standard</b> <em>--source-image</em> <b>./cameraclub.png</b> <em>--target-rom</em> <b>./gameboycam-intl.gb</b> <em>--target-frame</em> <b>7</b>
 </pre>
 
 ## Designing your frame image
@@ -90,3 +90,4 @@ This script supports the 4 standard release rom variants (Game Boy Camera, Zelda
 ## Credits
 Thanks to @jkbenaim for their [gbcamextract](https://github.com/jkbenaim/gbcamextract) program which helped to figure out the frame data and tile map addresses.  
 Thanks to @flozz for their [img2gb](https://github.com/flozz/img2gb) library which provides tile conversion for this script.
+Thanks to @Raphael-Boichot for contributing sample frame images
