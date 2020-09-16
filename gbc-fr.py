@@ -33,7 +33,7 @@ STANDARD_FRAME_MAP_LENGTH = 0x88
 WILD_FRAME_OFFSET = 0xC4000
 WILD_FRAME_LENGTH = 0x1800
 BANK_SHIFT = 0x4000
-TILE_BYTES = 16
+TILE_LENGTH = 0x10
 HELLO_KITTY_STANDARD_OFFSETS = [[0xC6C70, 0xCF5D0], [0xC3B80, 0xCF548], [0xCBEC0, 0xCF4C0], [0xC5F10, 0xCF658], [0xCF210, 0xCF7F0], [0xC73A0, 0xCF768], [0xB7420, 0xCF6E0], [0xBE3E0, 0xCF438], [0xB3CD0, 0xC7EF0], [0xB2B80, 0xCF3B0], [0x8FD50, 0xC7F78], [0xC3800, 0xD7800], [0xBDC00, 0xD3F70], [0xD7F70, 0xD7888], [0xC5C00, 0xD7998], [0xB7C20, 0xD7910], [0xC3ED0, 0xD3D50], [0x33F80, 0xD3CC8], [0xDB800, 0xD3DD8], [0xB2200, 0xD3EE8], [0xB34D0, 0xD3E60], [0xB3030, 0xD7A20], [0x93E00, 0xD7D50], [0x77FE0, 0xCFCB8], [0x77FF0, 0xCFDC4]]
 HELLO_KITTY_WILD_OFFSETS = [0x6C000, 0x60000, 0x64000, 0x65800, 0x69800, 0x68000]
 
@@ -137,12 +137,12 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 		sourceImageTiles = open(sourceImage, "rb")
 		sourceImageTiles.seek(0)
 		# read source image, one tile at a time
-		tile = sourceImageTiles.read(TILE_BYTES)
+		tile = sourceImageTiles.read(TILE_LENGTH)
 		# process tiles
 		while tile:
 			process_tile(frameType, tile)
 			# read next tile
-			tile = sourceImageTiles.read(TILE_BYTES)
+			tile = sourceImageTiles.read(TILE_LENGTH)
 			currentTile+=1
 		sourceImageTiles.close()
 
@@ -258,7 +258,7 @@ def main():
 		else:
 			#hk rom cannot be target
 			if targetRomHK == True:
-				raise Exception("Hello Kitty Pocket Camera is only supported as a source rom using copy mode")
+				raise Exception("Hello Kitty Pocket Camera is only supported as a source rom using copy mode\n")
 
 			#check source image format and size
 			if args.source_image.endswith('png') or args.source_image.endswith('bmp') or args.source_image.endswith('bin'):
@@ -274,26 +274,26 @@ def main():
 					elif sourceImageTiles.tell() == 8960:
 						frameType = 'wild'
 					else:
-						raise Exception("Incorrect source tileset size, should be Standard Frame: 160px x 144px (5760 bytes) or Wild Frame: 160px x 224px (8960 bytes)")
+						raise Exception("Incorrect source tileset size, should be Standard Frame: 160px x 144px (5760 bytes) or Wild Frame: 160px x 224px (8960 bytes)\n")
 				elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
 					convertBitmap = True
 					image = Image.open(args.source_image)
 					imageWidth, imageHeight = image.size
-					
+
 					#set frame type based on size
 					if imageWidth == 160 and imageHeight == 144:
 						frameType = 'standard'
 					elif imageWidth == 160 and imageHeight == 224:
 						frameType = 'wild'
 					else:
-						raise Exception("Incorrect source image size, should be Standard Frame: 160px x 144px or Wild Frame: 160px x 224px")
+						raise Exception("Incorrect source image size, should be Standard Frame: 160px x 144px or Wild Frame: 160px x 224px\n")
 
 				if args.target_frame > 8 and frameType == 'wild':
 					raise Exception("Max index for wild frames is 8")
 
 				frame_inject(frameType, args.source_image, args.target_rom, args.target_frame-1, convertBitmap)
 			else:
-				raise Exception("Source image can be .png, .bmp or already converted .bin (2bpp)")
+				raise Exception("Source image can be .png, .bmp or already converted .bin (2bpp)\n")
 		expose_all_wild_frames(args.target_rom)
 	except Exception as error:
 		print('\n'+str(error))

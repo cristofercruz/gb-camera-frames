@@ -14,7 +14,7 @@ usage: gbc-fr.py  [--source-image FILE]
                   [--copy-mode] [--frame-type {standard,wild}] [--source-rom FILE] [--source-frame [1-18]]
                   --target-rom FILE --target-frame [1-18]
 
-Tool to modify frames in a Game Boy Camera rom. Inject mode is the default mode and can be used to  
+Tool to modify frames in a Game Boy Camera rom. Inject mode is the default and can be used to  
 insert an image file (.png, .bmp) or tileset (.bin). An alternative copy mode can be enabled to  
 transfer frame data from one rom to another.
 
