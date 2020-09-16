@@ -43,7 +43,7 @@ Copy allows taking frame data from one rom file and pasting into another. You sp
 
 **Example**: Copy wild frame 2 from JP Pocket Camera rom onto the international rom, replacing wild frame 4.  
 <pre>
-$< python <b>./gbc-fr.py</b> <em>--mode</em> <b>copy</b> <em>--frame-type</em> <b>wild</b> <em>--source-rom</em> <b>./pocketcam-jp.gb</b> <em>--source-frame</em> <b>2</b> <em>--target-rom</em> <b>./gameboycam-intl.gb</b> <em>--target-frame</em> <b>4</b>
+$ python <b>./gbc-fr.py</b> <em>--mode</em> <b>copy</b> <em>--frame-type</em> <b>wild</b> <em>--source-rom</em> <b>./pocketcam-jp.gb</b> <em>--source-frame</em> <b>2</b> <em>--target-rom</em> <b>./gameboycam-intl.gb</b> <em>--target-frame</em> <b>4</b>
 </pre>
 
 Inject allows using a completely new image to replace an existing frame. You can specify the source image as a .png, .bmp and it will be converted to tile data or you can provide already formatted tile data as .bin. You will also specify the target rom and target frame.
