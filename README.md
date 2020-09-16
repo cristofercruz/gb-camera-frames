@@ -4,12 +4,12 @@ Python script to replace the built-in frames in the Game Boy Camera rom with you
 
 ## Requisites
 This script requires the following Python libraries:
-```
+```yaml
 python -m pip install --upgrade Pillow
 python -m pip install --upgrade img2gb
 ```
 ## Usage
-```
+```yaml
 usage: gbc-fr.py  [--source-image FILE]
                   [--copy-mode] [--frame-type {standard,wild}] [--source-rom FILE] [--source-frame [1-18]]
                   --target-rom FILE --target-frame [1-18]
