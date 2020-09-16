@@ -7,14 +7,22 @@ from PIL import Image
 from argparse import RawTextHelpFormatter
 from argparse import RawDescriptionHelpFormatter
 
-parser = argparse.ArgumentParser(description='Tool to modify standard photo frames in Game Boy Camera rom.\n\nUse inject mode to insert a frame from binary tile image file or copy mode to transfer frame data from one rom to another.', formatter_class=RawTextHelpFormatter)
-parser.add_argument('--mode', '-m', required=True, choices=['copy', 'inject'], default='inject', help='\n')
-parser.add_argument('--frame-type', '-ft', required=True, choices=['standard', 'wild'], default='standard', help='\n')
-parser.add_argument('--source-rom', '-sr', metavar='FILE', help='path to source rom .gb file, required for copy mode\n\n')
-parser.add_argument('--source-frame', '-sf', metavar='[1-18]', choices=range(1,26), type=int, help='frame number from source rom, standard:[1-18] wild:[1-8] (Hello Kitty - standard:[1-25] wild:[1-6]), required for copy mode\n\n')
-parser.add_argument('--source-image', '-si', metavar='FILE', help='path to source image file for inject mode (.png, .bmp or already formatted tile data .bin)\n\n')
-parser.add_argument('--target-rom', '-tr', required=True, metavar='FILE', help='path to target rom .gb file to be modified with changes\n\n')
-parser.add_argument('--target-frame', '-tf', required=True, metavar='[1-18]', choices=range(1,19), type=int, help='frame number for target rom, standard:[1-18] wild:[1-8]')
+parser = argparse.ArgumentParser(description='Tool to modify standard photo frames in Game Boy Camera rom. Inject mode is the default mode and can be used to insert an image file (.png, .bmp) or tileset (.bin). An alternative copy mode can be enabled to transfer frame data from one rom to another.', formatter_class=RawTextHelpFormatter)
+
+inject_group = parser.add_argument_group(title='inject mode options')
+copy_group = parser.add_argument_group(title='copy mode options')
+global_group = parser.add_argument_group(title='required options')
+
+inject_group.add_argument('--source-image', '-si', metavar='FILE', help='path to source image file for inject mode (.png, .bmp or already formatted tile data .bin)\n\n')
+
+copy_group.add_argument('--copy-mode', '-c', action='store_true', help='enables copy mode to rip frames from another camera rom .gb file\n')
+copy_group.add_argument('--frame-type', '-ft', choices=['standard', 'wild'], default='standard', help='select type of frame to copy from source rom\n')
+copy_group.add_argument('--source-rom', '-sr', metavar='FILE', help='path to source rom .gb file, required for copy mode\n')
+copy_group.add_argument('--source-frame', '-sf', metavar='[1-18]', choices=range(1,26), type=int, help='frame number from source rom, standard:[1-18] wild:[1-8] (Hello Kitty - standard:[1-25] wild:[1-6]), required for copy mode\n\n')
+
+global_group.add_argument('--target-rom', '-tr', required=True, metavar='FILE', help='path to target rom .gb file to be modified with changes\n')
+global_group.add_argument('--target-frame', '-tf', required=True, metavar='[1-18]', choices=range(1,19), type=int, help='frame number for target rom, standard:[1-18] wild:[1-8]')
+
 args = parser.parse_args()
 
 ROM_TITLE_OFFSET = 0x134
@@ -96,7 +104,7 @@ def frame_copy(frameType, sourceRom, sourceFrame, targetRom, targetFrame, hkRom)
 	targetRomFile.write(frameData)
 	targetRomFile.close()
 
-	print("\nTarget rom modified, frame " + str(sourceFrame+1) + " copied from " + str(sourceRom) + " into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n")
+	print("\nTarget rom modified, frame " + str(sourceFrame+1) + " copied from " + str(sourceRom) + " into " + str(frameType) + " frame slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n")
 
 def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	# init tile and tile map
@@ -118,11 +126,6 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 		# if source is bitmap, convert to tiles and process
 		image = Image.open(sourceImage)
 		imageWidth, imageHeight = image.size
-		# check image size
-		if frameType == 'standard' and (imageWidth != 160 or imageHeight != 144):
-			raise Exception("Incorrect image size, should be 160px x 144px")
-		elif frameType == 'wild' and (imageWidth != 160 or imageHeight != 224):
-			raise Exception("Incorrect image size, should be 160px x 224px")
 		sourceImageTiles = GBTileset.from_image(image).tiles
 		# process tiles
 		for aTile in sourceImageTiles:
@@ -132,13 +135,6 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	else:
 		# if source is already in tile format, read and process
 		sourceImageTiles = open(sourceImage, "rb")
-		sourceImageTiles.seek(0, os.SEEK_END)
-
-		if frameType == 'standard' and (sourceImageTiles.tell() != 5760):
-			raise Exception("Incorrect source tileset size, should be 160px x 144px (5760 bytes)")
-		elif frameType == 'wild' and (sourceImageTiles.tell() != 8960):
-			raise Exception("Incorrect source tileset size, should be 160px x 224px (8960 bytes)")
-
 		sourceImageTiles.seek(0)
 		# read source image, one tile at a time
 		tile = sourceImageTiles.read(TILE_BYTES)
@@ -177,7 +173,7 @@ def frame_inject(frameType, sourceImage, targetRom, targetFrame, convertBitmap):
 	targetRomFile.write(frameData)
 	targetRomFile.close()
 
-	print("\nTarget rom modified, source image " + str(sourceImage) + " injected into slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n" + str(limitReachedMessage))
+	print("\nTarget rom modified, source image " + str(sourceImage) + " injected into " + str(frameType) + " frame slot " + str(targetFrame+1) + " on " + str(targetRom) + ".\n" + str(limitReachedMessage))
 
 def process_tile(frameType, tile):
 	global frameTiles
@@ -239,7 +235,7 @@ def main():
 		targetRomHK = False
 		if targetRomTitle == "POCKETCAMERA_SN":
 			targetRomHK = True
-		if args.mode == "copy":
+		if args.copy_mode == "copy":
 			sourceRomFile = open(args.source_rom, "rb")
 			sourceRomFile.seek(ROM_TITLE_OFFSET)
 			sourceRomTitle = sourceRomFile.read(ROM_TITLE_LENGTH).decode("utf-8")
@@ -247,12 +243,8 @@ def main():
 			if sourceRomTitle == "POCKETCAMERA_SN":
 				sourceRomHK = True
 
-		if targetRomHK == True:
-			raise Exception("Hello Kitty Pocket Camera is only supported as a source rom using copy mode")
-		elif args.target_frame > 8 and args.frame_type == 'wild':
-			raise Exception("Max index for wild frames is 8")
-
-		if args.mode == "copy":
+		if args.copy_mode:
+			#validate copy arguments
 			if args.source_frame > 8 and args.frame_type == 'wild':
 				raise Exception("Max index for wild frames is 8")
 			elif args.source_frame > 6 and args.frame_type == 'wild' and sourceRomHK == True:
@@ -264,10 +256,42 @@ def main():
 			else:
 				frame_copy(args.frame_type, args.source_rom, args.source_frame-1, args.target_rom, args.target_frame-1, sourceRomHK)
 		else:
-			if args.source_image.endswith('bin'):
-				frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, False)
-			elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
-				frame_inject(args.frame_type, args.source_image, args.target_rom, args.target_frame-1, True)
+			#hk rom cannot be target
+			if targetRomHK == True:
+				raise Exception("Hello Kitty Pocket Camera is only supported as a source rom using copy mode")
+
+			#check source image format and size
+			if args.source_image.endswith('png') or args.source_image.endswith('bmp') or args.source_image.endswith('bin'):
+				
+				if args.source_image.endswith('bin'):
+					convertBitmap = False
+					sourceImageTiles = open(args.source_image, "rb")
+					sourceImageTiles.seek(0, os.SEEK_END)
+
+					#set frame type based on size
+					if sourceImageTiles.tell() == 5760:
+						frameType = 'standard'
+					elif sourceImageTiles.tell() == 8960:
+						frameType = 'wild'
+					else:
+						raise Exception("Incorrect source tileset size, should be Standard Frame: 160px x 144px (5760 bytes) or Wild Frame: 160px x 224px (8960 bytes)")
+				elif args.source_image.endswith('png') or args.source_image.endswith('bmp'):
+					convertBitmap = True
+					image = Image.open(args.source_image)
+					imageWidth, imageHeight = image.size
+					
+					#set frame type based on size
+					if imageWidth == 160 and imageHeight == 144:
+						frameType = 'standard'
+					elif imageWidth == 160 and imageHeight == 224:
+						frameType = 'wild'
+					else:
+						raise Exception("Incorrect source image size, should be Standard Frame: 160px x 144px or Wild Frame: 160px x 224px")
+
+				if args.target_frame > 8 and frameType == 'wild':
+					raise Exception("Max index for wild frames is 8")
+
+				frame_inject(frameType, args.source_image, args.target_rom, args.target_frame-1, convertBitmap)
 			else:
 				raise Exception("Source image can be .png, .bmp or already converted .bin (2bpp)")
 		expose_all_wild_frames(args.target_rom)
