@@ -1,4 +1,4 @@
-# Game Boy Camera frame replacer
+# Game Boy Camera frame injector/replacer
 
 Python script to replace the built-in frames in the Game Boy Camera rom with your own!
 
