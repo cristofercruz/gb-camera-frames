@@ -35,16 +35,16 @@ required arguments:
   --target-frame [1-18], -tf [1-18] #frame number for target rom, standard:[1-18] wild:[1-8]
 ```
 
-Two modes are available inject or copy.
+Two modes are available inject or copy:
 
-Inject is the default mode and allows using a completely new image to replace an existing frame. You can specify the source image as a .png, .bmp and it will be converted to tile data or you can provide already formatted tile data as .bin. You will also specify the target rom and target frame.
+**Inject** is the default mode and allows using a completely new image to replace an existing frame. You can specify the source image as a .png, .bmp and it will be converted to tile data or you can provide already formatted tile data as .bin. You will also specify the target rom and target frame.
 
 **Example**: Load supplied image into tile data and inject into the international rom, replacing frame 7.  
 <pre>
 python <b>./gbc-fr.py</b> <em>--source-image</em> <b>./cameraclub.png</b> <em>--target-rom</em> <b>./gameboycam-intl.gb</b> <em>--target-frame</em> <b>7</b>
 </pre>
 
-Copy mode pulls frame tile data from a source rom file and inserts it into the target rom. You will need to set the copy mode argument as well as specify the frame type.
+**Copy** mode pulls frame tile data from a source rom file and inserts it into the target rom. You will need to set the copy mode argument as well as specify the frame type.
 
 **Example**: Copy wild frame 2 from JP Pocket Camera rom onto the international rom, replacing wild frame 4.  
 <pre>
@@ -77,15 +77,17 @@ This script uses img2gb library to convert .png and .bmp source images to tile d
 <a href="#pic2tiles"><img id="pic2tiles" src="docs/pic2tiles.png" alt="Pic2Tiles application window"/></a> 
 
 ## Purpose
-Your modified ROM can be loaded into emulators with printer emulation like mGBA (some emulators may show a warning about incorrect checksum). Eventually, your custom rom could be loaded onto a [Game Boy Camera Flash Cartridge](https://github.com/HDR/Gameboy-Camera-Flashcart) once it becomes available.
+Your modified ROM can be flashed onto a [Game Boy Camera Flashcart](https://github.com/HDR/Gameboy-Camera-Flashcart) to run on Game Boy hardware. Alternatively, you can load the customized rom into emulators with printer emulation like mGBA (some emulators may show a warning about incorrect checksum).
 
 ## Notes
 This script will also patch your rom to expose all 8 available wild frame slots. The Japan region Pocket Camera normally only exposes 6 wild frames and the international region Game Boy Camera only exposes 7.
 
 ## Supported ROMs
-This script supports the 4 standard release rom variants (Game Boy Camera, Zelda Game Boy Camera, Pocket Camera, CoroCoro Pocket Camera) as a target or source file. A recent leak has brought to light a new unreleased Hello Kitty Pocket Camera rom variant which stores frame data unlike the others and as such is unsupported as a target rom but is supported as a source rom using the copy function so you can copy any of its 25 standard and 6 wild frames onto one of the release rom variants.
+This script supports the 3 standard release rom variants as a target or source file: Game Boy Camera (GBD-PCAX-0), Game Boy Camera - Zelda Limited Edition (GBD-PCBX-0), and Pocket Camera (GBD-PCAJ-1). In 2020, an unreleased Hello Kitty Pocket Camera rom variant was brought to light which stores frame data unlike the others and as such is unsupported as a target rom but is supported as a source rom using the copy function so you can copy any of its 25 standard and 6 wild frames onto one of the release rom variants.
 
 ## Credits
 Thanks to @jkbenaim for their [gbcamextract](https://github.com/jkbenaim/gbcamextract) program which helped to figure out the frame data and tile map addresses.  
 Thanks to @flozz for their [img2gb](https://github.com/flozz/img2gb) library which provides tile conversion for this script.  
 Thanks to @Raphael-Boichot for contributing sample frame images
+Thanks to @2BitPit for sample frame images
+Thanks to @HDR for designing and sharing the [Game Boy Camera Flashcart PCB](https://github.com/HDR/Gameboy-Camera-Flashcart)
